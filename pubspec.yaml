@@ -1,0 +1,51 @@
+name: trade_hall
+description: "A new Flutter project."
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get: ^4.6.6
+  http: ^1.1.2
+  dio: ^5.4.0
+  crypto: ^3.0.3
+  cupertino_icons: ^1.0.2
+  lottie: ^3.0.0
+  awesome_dialog: ^3.2.0
+  intl: ^0.17.0
+  get_storage: ^2.1.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+     - assets/images/
+     - assets/animations/
+  fonts:
+    - family: Segoe UI
+      fonts:
+        - asset: assets/fonts/Segoe UI Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Segoe UI.ttf
+          weight: 400
+        - asset: assets/fonts/Segoe UI Bold Italic.ttf
+        - asset: assets/fonts/Segoe UI Italic.ttf
+          style: italic
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/cairo/Cairo-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/cairo/Cairo-Light.ttf
+          weight: 300
+        - asset: assets/fonts/cairo/Cairo-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/cairo/Cairo-Regular.ttf
+          weight: 400
+
