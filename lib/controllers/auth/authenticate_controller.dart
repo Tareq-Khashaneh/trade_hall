@@ -14,7 +14,12 @@ class AuthenticateController extends GetxController {
   Future<bool> login() async {
     try {
       if (password.text.isNotEmpty && currentUser != null) {
-        String hashPassword = generateMd5(password.text);
+        String hashPassword = generateMd5(password.text).toUpperCase();
+        if(currentUser!.pin != hashPassword)
+          {
+              showSnackBar(TranslationKeys.passwordisWrong.tr);
+              return false;
+          }
         parameters loginParams = {
           'user_id': currentUser!.id,
           'pass': hashPassword,
@@ -30,7 +35,6 @@ class AuthenticateController extends GetxController {
       showSnackBar('$e');
       return false;
     }
-    showSnackBar('');
     return false;
   }
 
