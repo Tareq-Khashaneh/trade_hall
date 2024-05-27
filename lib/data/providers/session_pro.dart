@@ -6,7 +6,9 @@ import 'package:trade_hall/data/repositories/session_repo.dart';
 import '../../core/constants/typedef.dart';
 
 class SessionProvider {
-  final SessionsRepository _sessionsRepo = SessionsRepository();
+  final SessionsRepository _sessionsRepo ;
+
+  SessionProvider({required SessionsRepository sessionsRepo}) : _sessionsRepo = sessionsRepo;
 
   Future<List<SessionModel>?> getAllSessions(parameters params) async {
     try {

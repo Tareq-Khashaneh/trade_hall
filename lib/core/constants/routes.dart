@@ -3,6 +3,7 @@ import 'package:trade_hall/controllers/basket_quota/basket_quota_bindings.dart';
 import 'package:trade_hall/controllers/cart/cart_bindings.dart';
 import 'package:trade_hall/controllers/drawer/drawer_bindings.dart';
 import 'package:trade_hall/controllers/facility/facility_bindings.dart';
+import 'package:trade_hall/networking/connectivity_bindings.dart';
 import 'package:trade_hall/view/screens/auth_admin_screen.dart';
 import 'package:trade_hall/view/screens/basket_quota_screen.dart';
 import 'package:trade_hall/view/screens/authenticate_screen.dart';
@@ -10,11 +11,11 @@ import 'package:trade_hall/view/screens/cart_screen.dart';
 import 'package:trade_hall/view/screens/facility_info_screen.dart';
 import 'package:trade_hall/view/screens/splash_screen.dart';
 import 'package:get/get.dart';
-
 import '../../controllers/auth/auth_bindings.dart';
 import '../../controllers/facility/facility_confirm_form_bindings.dart';
 import '../../controllers/home/home_bindings.dart';
 import '../../controllers/session/session_bindings.dart';
+import '../../controllers/settings/settings_bindgins.dart';
 import '../../view/screens/facility_confirm_form_screen.dart';
 import '../../view/screens/facility_login_screen.dart';
 import '../../view/screens/facility_screen.dart';
@@ -22,6 +23,7 @@ import '../../view/screens/facility_send_quantity_screen.dart';
 import '../../view/screens/home_screen.dart';
 import '../../view/screens/language_screen.dart';
 import '../../view/screens/session_details_screen.dart';
+import '../../view/screens/settings_screen.dart';
 
 class AppRoutes {
   static const String splash = "/splash";
@@ -46,10 +48,15 @@ class AppRoutes {
     GetPage(
         name: AppRoutes.authAdminRoute,
         page: () => const AuthAdminScreen(),
-        binding: AuthAdminBindings()),
+        bindings: [ConnectivityBindings(),AuthAdminBindings(),]),
+    GetPage(
+        name: AppRoutes.settingsRoute,
+        page: () => const SettingsScreen(),
+      binding: SettingsBindings()
+    ),
     GetPage(
         name: AppRoutes.authenticateRoute,
-        page: () => AuthenticateScreen(),
+        page: () => const AuthenticateScreen(),
         binding: AuthBindings()),
     GetPage(
         name: AppRoutes.homeScreenRoute,
@@ -81,7 +88,7 @@ class AppRoutes {
         binding: FacilityConfirmFormBindings()),
     GetPage(
         name: AppRoutes.basketQuotaRoute,
-        page: () => BasketQuotaScreen(),
+        page: () => const BasketQuotaScreen(),
         bindings: [BasketQuotaBindings(), CartBindings()]),
     GetPage(
         name: AppRoutes.cartRoute,

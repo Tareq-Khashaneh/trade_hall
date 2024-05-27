@@ -5,7 +5,9 @@ import '../../core/constants/typedef.dart';
 import '../repositories/basket_repo.dart';
 
 class BasketProvider {
-  final BasketRepository _basketRepo = BasketRepository();
+  final BasketRepository _basketRepo ;
+
+  BasketProvider({required BasketRepository basketRepo}) : _basketRepo = basketRepo;
 
   Future<CartDataModel?> postBasketProducts(
       parameters params, String body) async {

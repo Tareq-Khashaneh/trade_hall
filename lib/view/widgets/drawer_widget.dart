@@ -65,9 +65,14 @@ class DrawerWidget extends GetView<DrawerGetxController> {
                         },
                         child: Text(TranslationKeys.setTime.tr));
               })),
-          SizedBox(
-            height: Get.size.height * .22,
-          ),
+          const Divider(),
+          _buildListTile(
+              icon: Icons.wifi_rounded,
+              text: TranslationKeys.setConnectivity.tr,
+              onTap: () {
+                Get.toNamed(AppRoutes.authAdminRoute);
+              }),
+
           const Divider(),
           _buildListTile(
             icon: Icons.logout_rounded,
@@ -105,7 +110,7 @@ class DrawerWidget extends GetView<DrawerGetxController> {
                   print(
                       "cardreader state ${controller.homeController.cardReadStatus}");
                   if (controller.homeController.cardReadStatus !=
-                      CardReadStatus.loading) {
+                      EnumStatus.loading) {
                     onTap!();
                   }
                 });

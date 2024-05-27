@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:trade_hall/controllers/home/home_controller.dart';
 import 'package:trade_hall/data/models/basket_quota_product_model.dart';
 import 'package:trade_hall/data/providers/products_pro.dart';
+import 'package:trade_hall/data/repositories/products_repo.dart';
 import 'package:trade_hall/getx_service/app_service.dart';
 import 'package:get/get.dart';
 import '../../core/constants/typedef.dart';
@@ -18,6 +19,7 @@ class BasketQuotaController extends GetxController {
     cardId = _homeController.cardId;
     userId = _homeController.currentUser!.id;
     isAdded = false;
+    _productsProvider = ProductsProvider(productRepo: ProductsRepository(apiService: appService.apiService));
     fetchProducts();
     super.onInit();
   }
@@ -38,9 +40,6 @@ class BasketQuotaController extends GetxController {
         List<BasketQuotaProductModel>? temp;
         temp = await _productsProvider.getBasketQuotaProducts(params);
         temp != null ? products = temp : products = [];
-        if (products.isEmpty) {
-          print("Products is Empty ");
-        }
       }
     } catch (e) {
       print("error is $e");
@@ -64,7 +63,7 @@ class BasketQuotaController extends GetxController {
         .quantityController
         .clear();
     isLoading = false;
-    // update();
+
   }
 
   bool addProductsToCart() =>
@@ -139,7 +138,7 @@ class BasketQuotaController extends GetxController {
                                 }
                                 return null;
                               } else if (value.isEmpty) {
-                                return "value is Empty";
+                                return "Translation.valueISEmpty.tr";
                               }
                             }
                           },
@@ -218,7 +217,7 @@ class BasketQuotaController extends GetxController {
   final CartController cartController = Get.find();
   final RxList<BasketQuotaProductModel> _products = RxList([]);
   final RxBool _isLoading = RxBool(true);
-  final ProductsProvider _productsProvider = ProductsProvider();
+  late ProductsProvider _productsProvider ;
   final MethodChannel platform =
       const MethodChannel('samples.flutter.dev/read');
   Rx<String>? _cardId;

@@ -1,11 +1,15 @@
 package com.example.flutter_app;
 
-import android.graphics.Bitmap;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Typeface;
-import android.os.Bundle;
+import android.net.wifi.WifiManager;
+import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-
 import com.nexgo.oaf.apiv3.APIProxy;
 import com.nexgo.oaf.apiv3.DeviceEngine;
 import com.nexgo.oaf.apiv3.DeviceInfo;
@@ -22,15 +26,15 @@ import com.nexgo.oaf.apiv3.device.reader.CardInfoEntity;
 import com.nexgo.oaf.apiv3.device.reader.CardReader;
 import com.nexgo.oaf.apiv3.device.reader.CardSlotTypeEnum;
 
-import java.util.ArrayList;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import io.flutter.Log;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
-
 import com.nexgo.oaf.apiv3.device.reader.OnCardInfoListener;
 import com.nexgo.oaf.apiv3.platform.Platform;
 
@@ -38,12 +42,7 @@ public class MainActivity extends FlutterActivity {
     String uid ;
     HashSet<CardSlotTypeEnum> slotTypes = new HashSet<>();
     private final int FONT_SIZE_SMALL = 20;
-    private final int FONT_SIZE_NORMAL = 24;
-
-    private FontEntity fontSmall = new FontEntity(DotMatrixFontEnum.CH_SONG_20X20, DotMatrixFontEnum.ASC_SONG_8X16);
-    private FontEntity fontNormal = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_12X24);
-    private FontEntity fontBold = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_BOLD_16X24);
-    private FontEntity fontBig = new FontEntity(DotMatrixFontEnum.CH_SONG_24X24, DotMatrixFontEnum.ASC_SONG_12X24, false, true);
+    private static final int NETWORK_SETTINGS_REQUEST_CODE = 1;
     DeviceEngine deviceEngine;
     Platform platform ;
     boolean isTimeOut;
@@ -53,7 +52,6 @@ public class MainActivity extends FlutterActivity {
     private final String PrintChannel = "samples.flutter.dev/print";
     Beeper beeper;
     public DeviceInfo deviceInfo;
-    boolean isFinished =false;
     Printer printer ;
     CardReader cardReader;
     @Override
@@ -77,27 +75,82 @@ public class MainActivity extends FlutterActivity {
                                 result.notImplemented();
                             }
                         });
-        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), MainChannel).setMethodCallHandler(
-                (call, result) -> {
-                    if (call.method.equals("readDeviceInfo")) {
-                        String deviceSn = readDeviceInfo();
-                        platform.enableControlBar();
-                        result.success(deviceSn);
-                    } else if (call.method.equals("setMainData")) {
-                        String dateTime = call.arguments();
-                        if(dateTime != null)
-                        {
-                            deviceEngine.setSystemClock(dateTime);
-                            System.out.println("date in java is " + dateTime);
-                            result.success(true);
-                        } else {
-                            result.notImplemented();
+            new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), MainChannel).setMethodCallHandler(
+                    (call, result) -> {
+                       switch (call.method){
+                           case "setMainSettings":
+                               setDefaultSettings();
+                               result.success(true);
+                               break;
+                            case "readDeviceInfo":
+                                String deviceSn = readDeviceInfo();
+                                result.success(deviceSn);
+                                break;
+                            case "setDateTime":
+                                String dateTime = call.arguments();
+                                if(dateTime != null)
+                                {
+                                    deviceEngine.setSystemClock(dateTime);
+                                    result.success(true);
+                                } else {
+                                    result.notImplemented();
+                                }
+                                break;
+//                            case "enableWifi":
+//                                WifiController.enableWifi();
+//                                result.success(true);
+//                                break;
+//                            case "disableWifi":
+//                                WifiController.disableWifi();
+//                                result.success(true);
+//                                break;
+                            case "setWifiInfo":
+                                String ssid = call.argument("ssid");
+                                String password = call.argument("password");
+                                if(ssid != null && password != null) {
+                                    platform.disableMobileData();
+                                    WifiController.connectToWifiNetwork(ssid, password);
+                                    result.success(null);
+                                }
+                                else {
+                                    result.notImplemented();
+                                }
+                                break;
+                           case "enableMobileData":
+                               WifiController.disableWifi();
+                               platform.enableMobileData();
+                             result.success(true);
+                             break;
+                           case "create apn":
+                               Map<String, String> map = call.arguments();
+                               String name = "",apnName = "",ip = "",port = "";
+                               if(map != null){
+                                   ip = map.get("ip");
+                                   port = map.get("port");
+                                   name = map.get("name");
+                                   apnName = map.get("apnName");
+                               }
+                            boolean isCreated =  MobileDataController.createApn(name,apnName,ip,port);
+                               result.success(isCreated);
+                               break;
+                           case "isApnInList":
+                               String apn = call.argument("apnName");
+                               boolean isAPNInList = MobileDataController.isAPNInList(apn);
+                               result.success(isAPNInList);
+                               break;
+//                           case "deleteApn":
+//                               String apnDel = call.argument("apnName");
+//                               MobileDataController.deleteApn(apnDel);
+//                               result.success(true);
+//                               break;
+                           case "openNetworkSettings":
+                               openNetworkSettings();
+                               result.success(true);
+                               break;
+                           default:
+                                result.notImplemented();
                         }
                     }
-                    else {
-                        result.notImplemented();
-                    }
-                }
         );
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), PrintChannel)
                 .setMethodCallHandler(
@@ -118,6 +171,15 @@ public class MainActivity extends FlutterActivity {
                             }
                         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == NETWORK_SETTINGS_REQUEST_CODE) {
+            // Notify Flutter side if needed, for now just return to the app
+        }
+    }
+
     public void printInfo(PrintCallBack printCallBack, String data,boolean isEnglish) {
         try{
             AlignEnum alignEnum;
@@ -128,7 +190,7 @@ public class MainActivity extends FlutterActivity {
             }
             printer.initPrinter();
             printer.appendPrnStr(data, FONT_SIZE_SMALL, alignEnum, false);
-            printer.setGray(GrayLevelEnum.LEVEL_2);
+            printer.setGray(GrayLevelEnum.LEVEL_0);
             printer.setTypeface(Typeface.DEFAULT);
             printer.setLetterSpacing(5);
             printer.startPrint(false, new OnPrintListener() {
@@ -149,13 +211,20 @@ public class MainActivity extends FlutterActivity {
             System.out.println("error in java " + e);
         }
     }
-
-    public String readDeviceInfo() {
-        String sn = deviceInfo.getSn();
-        System.out.println("sn " + sn);
-        return sn;
+    private void openNetworkSettings() {
+        Intent intent = new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS);
+        startActivityForResult(intent, NETWORK_SETTINGS_REQUEST_CODE);
     }
+    public String readDeviceInfo() {
+      return deviceInfo.getSn();
+    }
+    public void setDefaultSettings(){
+        platform.disableControlBar();
+        platform.enableControlBar();
+        platform.disableHomeButton();
+        platform.disableTaskButton();
 
+    }
     public interface ReadCallback {
         void onCreditRead(Map data);
     }
@@ -163,7 +232,6 @@ public class MainActivity extends FlutterActivity {
         void print(int status);
     }
     private void cardReaderTest(ReadCallback callback) {
-
         Thread readThread = new Thread(()-> {
             cardReader.searchCard(slotTypes, 50, new OnCardInfoListener() {
                 @Override
@@ -173,8 +241,8 @@ public class MainActivity extends FlutterActivity {
                        isTimeOut =false;
                        if (retCode == SdkResult.Success) {
                            if (cardInfo != null) {
-                               if (cardInfo.getCardExistslot() == CardSlotTypeEnum.RF) {
 
+                               if (cardInfo.getCardExistslot() == CardSlotTypeEnum.RF) {
                                    final M1CardHandler m1CardHandler = deviceEngine.getM1CardHandler();
                                    //step 3 , read UID
                                    uid = m1CardHandler.readUid();
@@ -187,7 +255,6 @@ public class MainActivity extends FlutterActivity {
                            }
                        } else if (retCode == SdkResult.Fail) {
                            System.out.println("ret code was Failed");
-
                            dataMap.put("cardId", uid);
                            dataMap.put("isTimeOut", isTimeOut);
                            callback.onCreditRead(dataMap);
@@ -198,8 +265,6 @@ public class MainActivity extends FlutterActivity {
                            dataMap.put("isTimeOut", isTimeOut);
                            callback.onCreditRead(dataMap);
                        }
-
-
                    }catch (Exception e){
                        System.out.println("Exception " + e);
                    }
@@ -213,7 +278,6 @@ public class MainActivity extends FlutterActivity {
                         }
                     });
                 }
-
                 @Override
                 public void onMultipleCards() {
                     cardReader.stopSearch();
@@ -230,13 +294,17 @@ public class MainActivity extends FlutterActivity {
         readThread.start();
    }
     public void init() {
-
         deviceEngine = APIProxy.getDeviceEngine(this);
         platform = deviceEngine.getPlatform();
         deviceInfo = deviceEngine.getDeviceInfo();
         cardReader = deviceEngine.getCardReader();
         slotTypes.add(CardSlotTypeEnum.RF);
         beeper = deviceEngine.getBeeper();
-         printer = deviceEngine.getPrinter();
+        printer = deviceEngine.getPrinter();
+        MobileDataController.context = this;
+        MobileDataController.contentResolver = this.getContentResolver();
+        WifiController.context = this;
+        WifiController.wifiManager= (WifiManager)   this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+
     }
 }

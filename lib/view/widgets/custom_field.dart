@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:trade_hall/controllers/auth/authenticate_controller.dart';
-import 'package:trade_hall/getx_service/app_service.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/app_colors.dart';
 
 class CustomField extends StatefulWidget {
-  CustomField(
+   CustomField(
       {super.key,
       required this.controller,
       required this.label,

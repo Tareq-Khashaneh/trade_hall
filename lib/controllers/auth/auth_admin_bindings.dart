@@ -6,6 +6,6 @@ import 'package:get/get.dart';
 class AuthAdminBindings implements Bindings{
   @override
   void dependencies() {
-    Get.put(AuthAdminController());
+    Get.put(AdminAuthController());
   }
 }

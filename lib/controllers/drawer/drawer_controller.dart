@@ -2,6 +2,7 @@
 import 'package:trade_hall/controllers/home/home_controller.dart';
 import 'package:trade_hall/controllers/session/session_controller.dart';
 import 'package:get/get.dart';
+import 'package:trade_hall/data/repositories/auth_repo.dart';
 import '../../core/constants/error.dart';
 import '../../data/models/session_details_model.dart';
 import '../../data/providers/auth_provider.dart';
@@ -11,14 +12,15 @@ import '../auth/authenticate_controller.dart';
 class DrawerGetxController extends GetxController {
   @override
   void onInit() {
-    // isEnglish = _appService.prefs.getString("lang") == 'en' ? true : false;
+    _authProvider = AuthProvider(authRepo: AuthRepo(apiService: _appService.apiService));
+
     super.onInit();
   }
 
   void setDeviceTime() async {
     isLoadingSetTime = true;
     update();
-    if (await _appService.setDeviceInfo()) {
+    if (await _appService.setDateTime()) {
       isLoadingSetTime = false;
       showSnackBar("Time was set",
           isFail: false, snackPosition: SnackPosition.BOTTOM);
@@ -47,12 +49,12 @@ class DrawerGetxController extends GetxController {
       return false;
     }
   }
-  late bool isEnglish;
+
   late bool isLoadingSetTime = false;
   final SessionController sessionController = Get.find();
   final AuthenticateController authenticateController = Get.find();
   final HomeController homeController = Get.find();
-  final AuthProvider _authProvider = AuthProvider();
+  late AuthProvider _authProvider ;
   SessionDetailsModel? logoutData;
   final AppService _appService = Get.find<AppService>();
 }

@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:trade_hall/controllers/auth/authenticate_controller.dart';
 import 'package:trade_hall/controllers/session/session_controller.dart';
-import 'package:trade_hall/core/enums/enum_state.dart';
 import 'package:get/get.dart';
 import '../../core/constants/error.dart';
-
+import '../../core/enums/enum_state.dart';
 import '../../data/models/product_model.dart';
 import '../../data/models/session_model.dart';
 import '../../data/models/user_model.dart';
@@ -18,13 +16,12 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance?.addObserver(this);
-    isBackPressed= false;
+    WidgetsBinding.instance.addObserver(this);
     cardId = '';
     currentUser = _authenticateController.currentUser;
     sessions = RxList([]);
     _products = RxList([]);
-    cardReadStatus = CardReadStatus.failed;
+    cardReadStatus = EnumStatus.failed;
     fetchSessions();
   }
 
@@ -34,39 +31,33 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
       final bool isTimeOut = data['isTimeOut'];
       cardId = data['cardId'];
       if (isTimeOut == true ) {
-       cardReadStatus =  CardReadStatus.timeout;
+        cardReadStatus =  EnumStatus.timeout;
 
         isLoading = false;
-// return true;
       }
      else if (cardId.isNotEmpty && currentUser != null) {
         isLoading = false;
-       cardReadStatus = CardReadStatus.success;
-       // update();
-        // return true;
+        cardReadStatus = EnumStatus.success;
       }
     } catch (e) {
       showSnackBar(
         'خطأ في قراءة البطاقة',
       );
       print('Error calling native method: $e');
-     cardReadStatus =  CardReadStatus.failed;
+      cardReadStatus =  EnumStatus.failed;
 
       isLoading = false;
-      // update();
-      // return false;
     }
     update();
-   return cardReadStatus == CardReadStatus.success ? true : false;
+   return cardReadStatus == EnumStatus.success ? true : false;
 
 
   }
 
   void stopRead()async{
     appService.platformRead.invokeMethod('stopRead').then((value) {
-      print("gere");
       if(value){
-        cardReadStatus = CardReadStatus.stopped;
+        cardReadStatus = EnumStatus.stopped;
         isLoading = false;
       }
     });
@@ -80,7 +71,7 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
     }
   }
   Future<bool> readCard() async {
-   cardReadStatus =  CardReadStatus.loading;
+    cardReadStatus =  EnumStatus.loading;
     isLoading = true;
     update();
     return _readCard();
@@ -99,22 +90,14 @@ class HomeController extends FullLifeCycleController with FullLifeCycleMixin {
   //getters
   UserModel? get currentUser => _currentUser?.value;
 
-  // String get cardId => _cardId;
   bool get isLoading => _isLoading.value;
   final RxBool _isLoading = RxBool(false);
-  final doubleClickInterval = 4000;
-  late Timer  doubleClickTimer ;
   late String cardId;
-  late CardReadStatus cardReadStatus;
+  late EnumStatus cardReadStatus;
   late bool isBackPressed;
   late RxList<ProductModel> _products;
 
 
-  @override
-  void onClose() {
-    doubleClickTimer.cancel();
-    super.onClose();
-  }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {

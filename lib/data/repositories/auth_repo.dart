@@ -5,7 +5,9 @@ import '../../core/constants/typedef.dart';
 import '../../networking/api_service.dart';
 
 class AuthRepo {
-  final ApiService _apiService = ApiServiceDio();
+  final ApiService _apiService ;
+
+  AuthRepo({required ApiService apiService}) : _apiService = apiService;
   Future<Map<String, dynamic>?> getAuthData(parameters params) async {
     try {
       dioRes? response = await _apiService.get(Api.login, params);

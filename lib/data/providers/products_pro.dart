@@ -7,7 +7,9 @@ import '../../core/constants/typedef.dart';
 
 
 class ProductsProvider {
-  final ProductsRepository _productRepo = ProductsRepository();
+  final ProductsRepository _productRepo ;
+
+  ProductsProvider({required ProductsRepository productRepo}) : _productRepo = productRepo;
 
   Future<List<BasketQuotaProductModel>?> getBasketQuotaProducts(
       parameters params) async {

@@ -20,61 +20,50 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async{
-        if (controller.isBackPressed) {
-          // If back button is pressed again within double click interval, close the app
-          return true;
-        } else {
-          print(controller.isBackPressed);
-          // Set flag and start timer for double click interval
-          controller.isBackPressed = true;
-
-          print(controller.isBackPressed);
-          showSnackBar("Press again to close",snackPosition: SnackPosition.BOTTOM,isFail: false,color: AppColors.kmainColor);
-          controller.doubleClickTimer = Timer(Duration(milliseconds: controller.doubleClickInterval), () {
-            // Reset flag after double click interval
-            controller.isBackPressed = false;
-          });
-          controller.stopRead();
-          return false;
-        }
-
-  },
+      onWillPop: () async {
+        return false;
+      },
       child: Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child:
-              Obx(() =>  Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  BottomNavBarContainer(
-                      fontSize: Get.size.height * 0.03,
-                      width: Get.size.width * 0.4,
-                    color: controller.isLoading ? AppColors.kColorGreyDark : null,
-                      text: TranslationKeys.scanCard.tr,
-                      onTap:
-                      !controller.isLoading ? () async {
-                        if (await controller.readCard()) {
-                          Get.toNamed(
-                            AppRoutes.basketQuotaRoute,
-                          );
-                        }
-                      } : null),
-                  BottomNavBarContainer(
-                    fontColor: !controller.isLoading ? AppColors.kBlack : AppColors.kWhiteColor,
-                      fontSize: Get.size.height * 0.03,
-                      width: Get.size.width * 0.4,
-                  color: !controller.isLoading ? AppColors.kColorGreyDark : null,
-                  text: TranslationKeys.cancelScan.tr,
-                  onTap:
-                  controller.isLoading ? () async {
-                      controller.stopRead();
-                  } : null)
-
-                ],
-              ))
-             ),
+              child: Obx(() => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      BottomNavBarContainer(
+                          fontSize: Get.size.height * 0.03,
+                          width: Get.size.width * 0.4,
+                          color: controller.isLoading
+                              ? AppColors.kColorGreyDark
+                              : null,
+                          text: TranslationKeys.scanCard.tr,
+                          onTap: !controller.isLoading
+                              ? () async {
+                                  if (await controller.readCard()) {
+                                    Get.toNamed(
+                                      AppRoutes.basketQuotaRoute,
+                                    );
+                                  }
+                                }
+                              : null),
+                      BottomNavBarContainer(
+                          fontColor: !controller.isLoading
+                              ? AppColors.kBlack
+                              : AppColors.kWhiteColor,
+                          fontSize: Get.size.height * 0.03,
+                          width: Get.size.width * 0.4,
+                          color: !controller.isLoading
+                              ? AppColors.kColorGreyDark
+                              : null,
+                          text: TranslationKeys.cancelScan.tr,
+                          onTap: controller.isLoading
+                              ? () async {
+                                  controller.stopRead();
+                                }
+                              : null)
+                    ],
+                  ))),
           appBar: AppBar(
             title: Text(
               controller.appService.dataDetails?.facilityName ?? '',
@@ -108,9 +97,12 @@ class HomeScreen extends GetView<HomeController> {
                         borderRadius: 12,
                       ),
                       title: Text(controller.currentUser?.userName ?? '',
-                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: AppColors.kWhiteColor,
-                              fontWeight: FontWeight.bold)),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  color: AppColors.kWhiteColor,
+                                  fontWeight: FontWeight.bold)),
                       trailing: const Icon(
                         Icons.check_circle,
                         color: Colors.white,
@@ -122,44 +114,44 @@ class HomeScreen extends GetView<HomeController> {
                   height: Get.size.height * 0.03,
                 ),
                 Obx(() => controller.isLoading
-                        ? Padding(
-                          padding: const EdgeInsets.only(top:50.0),
-                          child: Center(
-                              child: Lottie.asset(
-                                  'assets/animations/card_scan.json',
-                                  width: 500,
-                                  fit: BoxFit.cover),
-                            ),
-                        )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TitleWidget(
-                                title: TranslationKeys.sessions.tr,
-                                fontSize: 30,
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              SizedBox(
-                                height: 275,
-                                child: ListView.builder(
-                                    itemCount: controller.sessions.length,
-                                    itemBuilder: (context, index) {
-                                      return SessionCard(
-                                          sessionInfo: controller
-                                              .sessions[index].sessionInfo,
-                                          onTap: () {
-                                            controller.sessionController
-                                                .getSession(int.parse(controller
-                                                    .sessions[index].sessionId));
-                                            Get.toNamed(AppRoutes.sessionRoute);
-                                          });
-                                    }),
-                              ),
-                            ],
-                          ))
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 50.0),
+                        child: Center(
+                          child: Lottie.asset(
+                              'assets/animations/card_scan.json',
+                              width: 500,
+                              fit: BoxFit.cover),
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TitleWidget(
+                            title: TranslationKeys.sessions.tr,
+                            fontSize: 30,
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          SizedBox(
+                            height: 275,
+                            child: ListView.builder(
+                                itemCount: controller.sessions.length,
+                                itemBuilder: (context, index) {
+                                  return SessionCard(
+                                      sessionInfo: controller
+                                          .sessions[index].sessionInfo,
+                                      onTap: () {
+                                        controller.sessionController.getSession(
+                                            int.parse(controller
+                                                .sessions[index].sessionId));
+                                        Get.toNamed(AppRoutes.sessionRoute);
+                                      });
+                                }),
+                          ),
+                        ],
+                      ))
               ],
             ),
           ))),

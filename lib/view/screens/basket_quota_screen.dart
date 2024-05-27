@@ -37,7 +37,7 @@ class BasketQuotaScreen extends GetView<BasketQuotaController> {
                 BottomNavBarContainer(
                   text: TranslationKeys.cancel.tr,
                   fontSize: Get.size.height * 0.03,
-                  fontColor:AppColors.kBlack,
+                  fontColor: AppColors.kBlack,
                   width: Get.size.width * 0.4,
                   onTap: () {
                     showDialogue(

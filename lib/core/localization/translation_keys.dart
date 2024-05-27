@@ -1,6 +1,6 @@
 
 
- class TranslationKeys {
+ abstract class TranslationKeys {
     static String login = 'login';
     static String userName = 'userName';
     static String password = 'password';
@@ -11,6 +11,7 @@
     static String arabic = 'arabic';
     static String english = 'english';
     static String welcomeBack = 'welcomeBack';
+    static String welcomeBackAdmin = 'welcomeBackAdmin';
     static String pleaseSignIn = 'pleaseSignIn';
     static String failOccur = 'failOccur';
     static String scanCard = 'scanCard';
@@ -66,9 +67,21 @@
     static String getLastSession = 'getLastSession';
     static String success = 'success';
     static String confirmQuantity = 'confirmQuantity';
+    static String confirm = 'confirm';
+    static String setConnectivity = 'setConnectivity';
+    static String connectionType = 'connectionType';
+    static String ssid = 'ssid';
+    static String serverIp = 'serverIp';
+    static String port = 'port';
+    static String connect = 'connect';
+    static String valueISEmpty = 'value is empty';
+    static String name = 'name';
+    static String  connectionSuccess = 'Connection Success';
+    static String ssidOrPasswordIsWrong = 'ssidOrPasswordIsWrong';
+    static String  canNotEnableMobileData = 'canNotEnableMobileData';
    //errors
  static String timeWasNotSet = 'Time was not set';
  static String timeWasSet = 'Time was set';
  static String userNameOrPasswordEmpty = 'userNameOrPasswordEmpty';
- static String errorinprint = 'errorinprint';
+ static String errorInPrint = 'errorinprint';
 }

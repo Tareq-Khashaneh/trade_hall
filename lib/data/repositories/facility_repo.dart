@@ -10,7 +10,9 @@ import '../../core/constants/typedef.dart';
 
 
 class FacilityRepository{
-  final ApiService _apiService = ApiServiceDio();
+  final ApiService _apiService ;
+
+  FacilityRepository({required ApiService apiService}) : _apiService = apiService;
   Future<parameters?> getInfo(parameters params) async {
     try {
       dioRes? response = await _apiService.get(Api.facilityInfo, params);

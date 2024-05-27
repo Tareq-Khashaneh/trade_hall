@@ -14,30 +14,28 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     LocaleController localeController = Get.put(LocaleController());
     return GetMaterialApp(
-
       theme: ThemeData(
           scaffoldBackgroundColor: AppColors.kWhiteColor,
           fontFamily: localeController.fontFamily,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
               backgroundColor: AppColors.kmainColor),
           appBarTheme: AppBarTheme(
-
             backgroundColor: AppColors.kmainColor,
             centerTitle: true,
             foregroundColor: AppColors.kWhiteColor,
             iconTheme: IconThemeData(color: AppColors.kWhiteColor),
-          )),
-
+          ),
+       ),
       debugShowCheckedModeBanner: false,
       translations: AppTranslation(),
       locale: localeController.language,
-      initialRoute: AppRoutes.splash,
+      initialRoute:  AppRoutes.splash ,
       getPages: AppRoutes.pages,
     );
   }
+
 }

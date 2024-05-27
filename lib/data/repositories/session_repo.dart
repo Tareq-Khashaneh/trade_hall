@@ -6,8 +6,9 @@ import '../../core/constants/typedef.dart';
 import '../../networking/api_service.dart';
 
 class SessionsRepository {
-  final ApiService _apiService = ApiServiceDio();
+  final ApiService _apiService ;
 
+  SessionsRepository({required ApiService apiService}) : _apiService = apiService;
   Future<List<dynamic>?> getAllSessions(parameters params) async {
     try {
       dioRes? response = await _apiService.get(Api.sessionList, params);

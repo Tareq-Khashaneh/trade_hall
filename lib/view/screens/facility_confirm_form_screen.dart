@@ -186,7 +186,7 @@ class FacilityConfirmFormScreen extends GetView<FacilityConfirmFormController> {
                                               return "Confirm quantity Not match with quantity";
                                             }
                                           } else if (value.isEmpty) {
-                                            return "value is Empty";
+                                            return "Translation.valueISEmpty.tr";
                                           }
                                         }
                                         return null;

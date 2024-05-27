@@ -1,6 +1,7 @@
 
 
-enum CardReadStatus{
+enum EnumStatus{
+ initialize,
  success,
  failed,
  timeout,

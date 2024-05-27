@@ -1,11 +1,12 @@
-import 'package:dio/dio.dart' as dio;
 
+import 'package:dio/dio.dart' as dio;
 import '../core/constants/api_endpoint.dart';
 import '../core/constants/error.dart';
 import '../core/constants/typedef.dart';
 
 
 abstract class ApiService {
+
   Future<dio.Response?> get(String url, parameters? params);
   Future<dioRes?> post(String url, parameters params, var data);
 }
@@ -14,7 +15,7 @@ class ApiServiceDio implements ApiService {
   late dio.Dio _dio;
   ApiServiceDio() {
     dio.BaseOptions options = dio.BaseOptions(
-        baseUrl: Api.mainUrl,
+        baseUrl: Api.baseUrl,
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 8), // 60 seconds
         receiveTimeout: const Duration(seconds: 8),
@@ -31,7 +32,7 @@ class ApiServiceDio implements ApiService {
       return response;
     } on dio.DioException catch (e) {
       print("error in get service $e");
-      DioExceptions().getExceptionType(e);
+      DioExceptions.getExceptionType(e);
       return null;
     }
   }
@@ -44,7 +45,7 @@ class ApiServiceDio implements ApiService {
       return response;
     } on dio.DioException catch (e) {
       print("error in post service $e");
-      DioExceptions().getExceptionType(e);
+      DioExceptions.getExceptionType(e);
       return null;
     }
   }

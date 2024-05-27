@@ -21,4 +21,5 @@ class ProductModel {
       unit: data['unit'],
       amount: data['amount_precision'],
       quota: data['device_quota']);
+
 }

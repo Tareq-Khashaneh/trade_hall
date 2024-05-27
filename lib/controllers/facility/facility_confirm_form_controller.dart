@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:trade_hall/core/localization/translation_keys.dart';
 import 'package:trade_hall/data/models/product_model.dart';
 import 'package:trade_hall/data/repositories/facility_repo.dart';
 import 'package:trade_hall/getx_service/app_service.dart';
@@ -15,7 +16,7 @@ class FacilityConfirmFormController extends GetxController with WidgetsBindingOb
   late ProductModel? product;
   String mastercardId = '';
   bool isLoading = false;
-  final FacilityRepository facilityRep = FacilityRepository();
+  late FacilityRepository facilityRep ;
   final AppService appService = Get.find();
   String? validate(String? value) {
     if (value != null) {
@@ -25,7 +26,7 @@ class FacilityConfirmFormController extends GetxController with WidgetsBindingOb
           return "value is zero";
         }
       } else if (value.isEmpty) {
-        return "value is Empty";
+        return TranslationKeys.valueISEmpty.tr;
       }
     }
     return null;
@@ -127,6 +128,7 @@ class FacilityConfirmFormController extends GetxController with WidgetsBindingOb
     orderNum = TextEditingController();
     quantity = TextEditingController();
     confirmSentQuantity = TextEditingController();
+    facilityRep = FacilityRepository(apiService: appService.apiService);
     super.onInit();
   }
   @override

@@ -6,53 +6,56 @@ import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
 
 abstract class Exceptions {
-  void getExceptionType(dio.DioException e);
+  static void getExceptionType(dio.DioException e){}
 }
 
 class DioExceptions implements Exceptions {
-  @override
-  void getExceptionType(dio.DioException e) {
+  // static late dio.DioException dioException;
+  static void getExceptionType(dio.DioException e) {
+    String errorMessage = "";
     switch (e.type) {
       case dio.DioExceptionType.connectionTimeout:
-        showSnackBar(e.message);
+        errorMessage = "Connection timed out";
         break;
       case dio.DioExceptionType.receiveTimeout:
-        showSnackBar(e.message);
+        errorMessage = "Response timed out";
         break;
       case dio.DioExceptionType.sendTimeout:
-        showSnackBar(e.message);
+        errorMessage = "Request timed out while sending data";
         break;
       case dio.DioExceptionType.badCertificate:
-        showSnackBar(e.message);
+        errorMessage = "The server's SSL certificate is invalid. Please contact the administrator.";
+
         break;
       case dio.DioExceptionType.badResponse:
-        showSnackBar(e.message);
+        errorMessage = "Received a bad response from the server. Please try again later.";
+
         break;
       case dio.DioExceptionType.cancel:
-        showSnackBar(e.message);
+        errorMessage = "Request canceled";
         break;
       case dio.DioExceptionType.connectionError:
-        showSnackBar(e.message);
+        errorMessage = "Unable to establish a connection. Please check your Credentials";
         break;
       // TODO: Handle this case.
       case dio.DioExceptionType.unknown:
-        showSnackBar(e.message);
+        errorMessage = "An unexpected error occurred";
         break;
       default:
-        showSnackBar('حدث خطأ اثناء تحميل البيانات');
+        showSnackBar('An unexpected error occurred');
       // TODO: Handle this case.
     }
+    showSnackBar(errorMessage);
   }
 }
 
 void showSnackBar(String? message,{bool isFail = true,snackPosition =SnackPosition.TOP,Color fontColor = Colors.white,Color? color ,Duration? duration}) {
   Get.snackbar(
-    isFail ? TranslationKeys.failOccur.tr : '',
-    message!,
-
+    '',
+    message ?? "no error message",
     messageText: Padding(
       padding: const EdgeInsets.only(bottom: 20,),
-      child: Text(message,
+      child: Text(message ?? 'no error message',
           style:
               TextStyle(fontSize: Get.size.height * 0.03, color: fontColor),
       textAlign: TextAlign.center,
@@ -61,34 +64,40 @@ void showSnackBar(String? message,{bool isFail = true,snackPosition =SnackPositi
     isDismissible: true,
     snackPosition: snackPosition,
     snackStyle: SnackStyle.FLOATING,
-    backgroundColor: color ?? Colors.red,
+    backgroundColor: isFail ? Colors.red : AppColors.kmainColor,
     colorText: Colors.white,
-    duration: duration ??  const Duration(milliseconds: 3500),
+    duration: duration ??  const Duration(milliseconds: 4000),
     margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
     padding: const EdgeInsets.only(bottom: 10 ,left: 10.0,right: 10),
   );
 }
-Future<AwesomeDialog> showDialogue(
-    { required String title,
-      required String desc,
-      required DialogType dialogType,
-      required BuildContext context,
-      required Function() onPressYes}) async =>
+Future<AwesomeDialog> showDialogue({
+  String? title,
+  String desc = '',
+  dismissOnTouchOutside = true,
+  required DialogType dialogType,
+  required BuildContext context,
+  bool autoDismiss = true,
+  Function()? onPressYes,
+  Function()? onPressNo,
+  Widget? body,
+  Widget? customHeader,
+}) async =>
     AwesomeDialog(
-      context: context,
-      dialogType: dialogType,
-      animType: AnimType.scale,
-      title: title ,
-      desc: desc,
-      headerAnimationLoop: false,
-      btnOkColor: AppColors.kmainColor,
-      btnOkText: TranslationKeys.yes.tr,
-      btnCancelColor: Colors.grey.withOpacity(0.65),
-      btnCancelText: TranslationKeys.no.tr,
-      btnCancelOnPress: (){
-
-      },
-      btnOkOnPress: () {
-        onPressYes();
-      },
-    )..show();
+        context: context,
+        dialogType: dialogType,
+        animType: AnimType.scale,
+        title: title,
+        desc: desc,
+        body: body,
+        customHeader: customHeader,
+        dismissOnTouchOutside: dismissOnTouchOutside,
+        headerAnimationLoop: false,
+        autoDismiss: autoDismiss,
+        btnOkColor: AppColors.kmainColor,
+        btnOkText: 'نعم',
+        btnCancelColor: Colors.grey.withOpacity(0.65),
+        btnCancelText: "لا",
+        btnCancelOnPress: onPressNo,
+        btnOkOnPress: onPressYes)
+      ..show();

@@ -4,7 +4,9 @@ import '../../core/constants/typedef.dart';
 import '../../networking/api_service.dart';
 
 class ProductsRepository {
-  final ApiService _apiService = ApiServiceDio();
+  final ApiService _apiService ;
+
+  ProductsRepository({required ApiService apiService}) : _apiService = apiService;
 
   Future<List<dynamic>?> getBasketQuotaProducts(parameters params) async {
     try {

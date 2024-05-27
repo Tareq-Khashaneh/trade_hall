@@ -8,7 +8,9 @@ import '../../core/constants/typedef.dart';
 
 class InitProvider {
   
-    final InitRepository _initRepository = InitRepository();
+    final InitRepository _initRepository;
+
+  InitProvider({required InitRepository initRepository}) : _initRepository = initRepository;
     Future<DataModel?> getMainData(parameters params)async{
       try{
         Map<String,dynamic>? data = await _initRepository.getMainData(params);

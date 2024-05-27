@@ -6,9 +6,11 @@ import 'package:trade_hall/controllers/auth/authenticate_controller.dart';
 import 'package:trade_hall/controllers/home/home_controller.dart';
 import 'package:trade_hall/data/models/cart_data.dart';
 import 'package:trade_hall/data/providers/basket_pro.dart';
+import 'package:trade_hall/data/repositories/basket_repo.dart';
 import 'package:trade_hall/getx_service/app_service.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:trade_hall/networking/api_service.dart';
 import '../../core/constants/error.dart';
 import '../../core/constants/typedef.dart';
 import '../../core/theme/app_colors.dart';
@@ -25,6 +27,8 @@ class CartController extends GetxController {
     printData = '';
     totalPrice = 0.0;
     isEnglish = appService.storage.read("lang") == 'en' ? true : false;
+    _basketProvider = BasketProvider(basketRepo: BasketRepository(apiService: appService.apiService));
+    _initRepo = InitRepository(apiService: appService.apiService);
     super.onInit();
   }
 
@@ -142,7 +146,7 @@ class CartController extends GetxController {
                               }
                               return null;
                             } else if (value.isEmpty) {
-                              return "value is Empty";
+                              return "Translation.valueISEmpty.tr";
                             }
                           }
                         },
@@ -264,7 +268,7 @@ ${"".padRight(20)}${TranslationKeys.thanks.tr}
         throw("error in get print to server");
       }
        } catch (e) {
-      showSnackBar(TranslationKeys.errorinprint.tr);
+      showSnackBar(TranslationKeys.errorInPrint.tr);
       print('Error calling native method: $e');
     }
   }
@@ -284,12 +288,12 @@ ${"".padRight(20)}${TranslationKeys.thanks.tr}
     }
     return itemList;
   }
-  final InitRepository _initRepo = InitRepository();
+  late InitRepository _initRepo;
   late bool isEnglish;
   CartDataModel? cartData;
   late String printData;
   final AuthenticateController authController = Get.find();
-  final BasketProvider _basketProvider = BasketProvider();
+  late BasketProvider _basketProvider ;
   final _formKey = GlobalKey<FormState>();
   final AppService appService = Get.find();
   final HomeController homeController = Get.find();

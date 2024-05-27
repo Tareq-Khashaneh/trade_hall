@@ -51,14 +51,17 @@ class CartScreen extends GetView<CartController> {
                         onPressYes: () {
                           controller.payment();
                           showDialogue(
-                              dialogType: DialogType.infoReverse,
-                              context: context,
-                              title: TranslationKeys.print.tr,
-                              desc: TranslationKeys.doYouWantToPrint.tr,
-                              onPressYes: () async {
-                                await controller.printInvoice();
-                                // Get.offAllNamed(AppRoutes.homeScreenRoute);
-                              });
+                            dialogType: DialogType.infoReverse,
+                            context: context,
+                            title: TranslationKeys.print.tr,
+                            desc: TranslationKeys.doYouWantToPrint.tr,
+                            onPressYes: () async {
+                              await controller.printInvoice();
+                              Get.offAllNamed(AppRoutes.homeScreenRoute);
+                            },
+                            onPressNo: () =>
+                                Get.offAllNamed(AppRoutes.homeScreenRoute),
+                          );
                         },
                       );
                     }),
@@ -69,16 +72,23 @@ class CartScreen extends GetView<CartController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(" ${TranslationKeys.totalPrice.tr}",
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.black, fontWeight: FontWeight.bold)),
-                      GetBuilder<CartController>(builder: (_){
-                        return  Text(
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                      GetBuilder<CartController>(builder: (_) {
+                        return Text(
                           '${controller.totalPrice.toStringAsFixed(0)} ${TranslationKeys.syp.tr}',
-                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: Colors.black, fontWeight: FontWeight.bold),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                         );
                       })
-
                     ],
                   ),
                 ),
@@ -134,8 +144,8 @@ class CartScreen extends GetView<CartController> {
                         right: 0,
                         left: 0,
                         child: Padding(
-                          padding:
-                              const EdgeInsets.only(top: 5, left: 15, right: 15),
+                          padding: const EdgeInsets.only(
+                              top: 5, left: 15, right: 15),
                           child: SizedBox(
                               height: Get.size.height * 0.7,
                               child: GetBuilder<CartController>(
@@ -171,9 +181,9 @@ class CartScreen extends GetView<CartController> {
                                             return Dismissible(
                                               key: Key(item),
                                               direction: controller.isEnglish
-                                                  ? DismissDirection.endToStart // Left-to-right language
+                                                  ? DismissDirection
+                                                      .endToStart // Left-to-right language
                                                   : DismissDirection.startToEnd,
-
                                               onDismissed: (direction) {
                                                 basketc
                                                     .isCartListChanged(product);
@@ -182,15 +192,16 @@ class CartScreen extends GetView<CartController> {
                                                   index,
                                                   item,
                                                 );
-                                                controller.cartProducts.isEmpty ? Get.back():
-
-                                                controller.calculateTotalPrice();
-
+                                                controller.cartProducts.isEmpty
+                                                    ? Get.back()
+                                                    : controller
+                                                        .calculateTotalPrice();
                                               },
                                               background: Container(
                                                 color: Colors.red,
                                                 child: const Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
                                                   children: [
                                                     Icon(Icons.delete,
                                                         color: Colors.white),

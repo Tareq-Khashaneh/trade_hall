@@ -7,7 +7,9 @@ import '../../core/constants/typedef.dart';
 
 
 class FacilityProvider {
-  final FacilityRepository facilityRepository = FacilityRepository();
+  final FacilityRepository facilityRepository ;
+
+  FacilityProvider({required this.facilityRepository});
 
   Future<FacilityInfoModel?> getFacilityInfo(parameters params) async {
     try {

@@ -1,11 +1,9 @@
 import 'package:trade_hall/controllers/auth/authenticate_controller.dart';
-
 import 'package:trade_hall/data/models/session_details_model.dart';
 import 'package:trade_hall/data/providers/session_pro.dart';
-import 'package:trade_hall/data/repositories/init_repo.dart';
+import 'package:trade_hall/data/repositories/session_repo.dart';
 import 'package:trade_hall/getx_service/app_service.dart';
 import 'package:get/get.dart';
-
 import '../../core/constants/error.dart';
 import '../../core/constants/typedef.dart';
 import '../../core/localization/translation_keys.dart';
@@ -15,6 +13,7 @@ import '../../data/models/session_model.dart';
 class SessionController extends GetxController {
   @override
   void onInit() {
+    _sessionProvider = SessionProvider(sessionsRepo: SessionsRepository(apiService: _appService.apiService));
     isEnglish = _appService.storage.read("lang") == 'en' ? true : false;
     super.onInit();
   }
@@ -62,14 +61,16 @@ ${TranslationKeys.totalPrice.tr}: ${sessionDetails!.total!.toStringAsFixed(0)}
     return itemList;
   }
   Future<List<SessionModel>?> fetchSessions() async {
+    List<SessionModel>? temp;
     try {
       parameters params = {'user_id': _authenticateController.currentUser!.id};
       params.addAll(_appService.params);
-      List<SessionModel>? temp = await _sessionProvider.getAllSessions(params);
-      return temp;
+      temp = await _sessionProvider.getAllSessions(params);
     } catch (e) {
       print("error in fetchSessions $e");
+
     }
+    return temp;
   }
   void printSessionInfo() async {
     try {
@@ -84,7 +85,7 @@ ${TranslationKeys.totalPrice.tr}: ${sessionDetails!.total!.toStringAsFixed(0)}
 
       print("data in FLutter $status");
     } catch (e) {
-      showSnackBar(TranslationKeys.errorinprint.tr);
+      showSnackBar(TranslationKeys.errorInPrint.tr);
       print('Error calling native method: $e');
     }
   }
@@ -93,11 +94,11 @@ ${TranslationKeys.totalPrice.tr}: ${sessionDetails!.total!.toStringAsFixed(0)}
   bool get isLoading => _isLoading.value;
 
   final RxBool _isLoading = RxBool(false);
+  final AuthenticateController _authenticateController = Get.find();
   late bool isEnglish;
   late String? sessionTemplate;
   final AppService _appService = Get.find();
-  final AuthenticateController _authenticateController = Get.find();
-  final SessionProvider _sessionProvider = SessionProvider();
+  late SessionProvider _sessionProvider ;
   late SessionDetailsModel? sessionDetails;
   late int? sessionId;
 }

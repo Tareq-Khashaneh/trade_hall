@@ -20,11 +20,6 @@ class FacilityInfoScreen extends GetView<FacilityController> {
               style: const TextStyle(color: Colors.white),
             ),
             bottom: TabBar(
-              isScrollable: false,
-              indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.grey,
-              // indicatorColor: C,
               tabs: [
                 Tab(
                   icon: Icon(

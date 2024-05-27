@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trade_hall/data/repositories/facility_repo.dart';
 import '../../core/constants/error.dart';
 import '../../core/localization/translation_keys.dart';
 import '../../data/models/current_product_balance_model.dart';
@@ -92,6 +93,7 @@ class FacilityController extends GetxController {
   void onInit() {
     password = TextEditingController();
     isLoading = false;
+    _facilityProvider = FacilityProvider(facilityRepository: FacilityRepository(apiService: appService.apiService));
     super.onInit();
   }
   @override
@@ -102,7 +104,7 @@ class FacilityController extends GetxController {
 
   FacilityInfoModel? facilityInfo;
   final AppService appService = Get.find<AppService>();
-  final FacilityProvider _facilityProvider = FacilityProvider();
+  late FacilityProvider _facilityProvider;
   late bool isLoading;
   late TextEditingController password;
 

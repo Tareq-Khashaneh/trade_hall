@@ -8,7 +8,9 @@ import '../../core/constants/typedef.dart';
 
 
 class BasketRepository {
-  final ApiService _apiService = ApiServiceDio();
+  final ApiService _apiService ;
+
+  BasketRepository({required ApiService apiService}) : _apiService = apiService;
 
   Future<parameters?> postBasketProducts(parameters params,String body)async{
     try {

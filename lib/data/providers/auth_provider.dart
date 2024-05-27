@@ -5,7 +5,9 @@ import '../models/auth_model.dart';
 import '../models/session_details_model.dart';
 
 class AuthProvider {
-  final AuthRepo _authRepo = AuthRepo();
+  final AuthRepo _authRepo ;
+
+  AuthProvider({required AuthRepo authRepo}) : _authRepo = authRepo;
   Future<AuthModel?> getAuthData(parameters params) async {
     try {
       Map<String, dynamic>? data = await _authRepo.getAuthData(params);

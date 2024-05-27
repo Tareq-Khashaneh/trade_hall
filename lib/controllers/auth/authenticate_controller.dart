@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:trade_hall/data/models/auth_model.dart';
 import 'package:trade_hall/data/providers/auth_provider.dart';
 import 'package:get/get.dart';
+import 'package:trade_hall/data/repositories/auth_repo.dart';
 import '../../core/constants/error.dart';
 import '../../core/constants/typedef.dart';
 import '../../core/localization/translation_keys.dart';
@@ -46,6 +47,7 @@ class AuthenticateController extends GetxController {
   void onInit() async {
     password = TextEditingController();
     users = _appService.dataDetails?.users ?? [];
+    _authProvider = AuthProvider(authRepo: AuthRepo(apiService: _appService.apiService));
     super.onInit();
   }
 
@@ -65,7 +67,7 @@ class AuthenticateController extends GetxController {
   //variables
   AuthModel? authModel;
   final formKey = GlobalKey<FormState>();
-  final AuthProvider _authProvider = AuthProvider();
+  late AuthProvider _authProvider ;
   final AppService _appService = Get.find();
   Rx<UserModel>? _currentUser;
   late TextEditingController password;
