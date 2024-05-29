@@ -220,10 +220,8 @@ public class MainActivity extends FlutterActivity {
     }
     public void setDefaultSettings(){
         platform.disableControlBar();
-        platform.enableControlBar();
         platform.disableHomeButton();
         platform.disableTaskButton();
-
     }
     public interface ReadCallback {
         void onCreditRead(Map data);
