@@ -107,6 +107,7 @@ public class MainActivity extends FlutterActivity {
                             case "setWifiInfo":
                                 String ssid = call.argument("ssid");
                                 String password = call.argument("password");
+                                System.out.println("set Wifi info there is ");
                                 if(ssid != null && password != null) {
                                     platform.disableMobileData();
                                     WifiController.connectToWifiNetwork(ssid, password);

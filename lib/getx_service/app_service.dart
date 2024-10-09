@@ -43,13 +43,12 @@ class AppService extends GetxService {
     };
     await platformMain.invokeMethod('setMainSettings');
     isConnected = await checkConnectivity();
+    isServerConnected = false;
     if (isConnected) {
       if (storage.read("ip") != null && storage.read("port") != null) {
         isServerConnected = await initializeDataDetails(
             ip: storage.read("ip"), port: storage.read("port"));
       }
-    } else {
-      isServerConnected = false;
     }
     return this;
   }

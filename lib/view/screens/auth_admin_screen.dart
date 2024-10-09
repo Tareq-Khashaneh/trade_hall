@@ -96,6 +96,7 @@ class AuthAdminScreen extends GetView<AdminAuthController> {
                               child: Stack(
                                 children: [
                                   CustomField(
+                                    key: const Key("CustomField"),
                                     controller: controller.password,
                                     contentPadding: const EdgeInsets.only(
                                         left: 40, top: 5, bottom: 5, right: 10),
@@ -125,6 +126,7 @@ class AuthAdminScreen extends GetView<AdminAuthController> {
                                     controller.password.clear();
                                   },
                                   child: Container(
+                                    key: const Key('login button'),
                                     alignment: Alignment.center,
                                     padding: const EdgeInsets.only(
                                         top: 10, bottom: 12, left: 8, right: 10),

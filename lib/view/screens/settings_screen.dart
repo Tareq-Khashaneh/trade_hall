@@ -7,8 +7,8 @@ import 'package:trade_hall/core/constants/routes.dart';
 import 'package:trade_hall/view/widgets/circular_loading.dart';
 import 'package:trade_hall/view/widgets/custom_button.dart';
 import 'package:trade_hall/view/widgets/custom_field.dart';
-import 'package:trade_hall/view/widgets/custom_icon.dart';
 import '../../controllers/settings/settings_controller.dart';
+import '../../core/keys/settings_screen_key.dart';
 import '../../core/localization/translation_keys.dart';
 import '../../core/theme/app_colors.dart';
 import '../widgets/app_bar_widget.dart';
@@ -28,37 +28,40 @@ class SettingsScreen extends GetView<SettingsController> {
           appBar: buildAppBar(
               title: TranslationKeys.setConnectivity.tr, context: context),
           body: Padding(
-            padding: const EdgeInsets.fromLTRB(22, 30,22,0),
+            padding: const EdgeInsets.fromLTRB(22, 30, 22, 0),
             child: GetBuilder<SettingsController>(builder: (_) {
               return controller.isLoading
                   ? const CircularLoading()
                   : SingleChildScrollView(
                       child: Column(
-
                         children: [
-                             DropdownButtonFormField(
+                          DropdownButtonFormField(
+                            key: SettingsKeys.dropDown,
                             decoration: InputDecoration(
                               label: Text(
                                 TranslationKeys.connectionType.tr,
                               ),
-                              suffixIcon:controller.selectedChoice != 'Wifi'? IconButton(onPressed: controller.openNetworkSettings, icon: const Icon(Icons.settings)): null,
+                              suffixIcon: controller.selectedChoice != 'Wifi'
+                                  ? IconButton(
+                                      onPressed: controller.openNetworkSettings,
+                                      icon: const Icon(Icons.settings))
+                                  : null,
                               labelStyle:
                                   TextStyle(color: AppColors.kmainColor),
                               enabledBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: AppColors.kTextColor),
                                   borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          Get.size.height * 0.1))),
+                                      Radius.circular(Get.size.height * 0.1))),
                               focusedBorder: OutlineInputBorder(
                                   borderSide:
                                       BorderSide(color: AppColors.kTextColor),
                                   borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          Get.size.height * 0.1))),
+                                      Radius.circular(Get.size.height * 0.1))),
                             ),
                             items: controller.connectionChoices
                                 .map((e) => DropdownMenuItem(
+                                      key: Key(e),
                                       value: e,
                                       child: Text(e),
                                     ))
@@ -78,8 +81,10 @@ class SettingsScreen extends GetView<SettingsController> {
                               ? Form(
                                   key: controller.wifiFormKey,
                                   child: Column(
+                                    key: const Key("wifi form"),
                                     children: [
                                       CustomField(
+                                        key: SettingsKeys.wifiNetworkName,
                                         controller: controller.ssid,
                                         label: TranslationKeys.ssid.tr,
                                         validator: (value) {
@@ -96,6 +101,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                         height: height,
                                       ),
                                       CustomField(
+                                        key: SettingsKeys.wifiPassword,
                                         controller: controller.password,
                                         label: TranslationKeys.password.tr,
                                         isSecure: true,
@@ -113,6 +119,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                         height: height,
                                       ),
                                       CustomField(
+                                        key: SettingsKeys.wifiIp,
                                         controller:
                                             controller.serverIpController,
                                         keyboardType: TextInputType.number,
@@ -131,6 +138,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                         height: height,
                                       ),
                                       CustomField(
+                                        key: SettingsKeys.wifiPort,
                                         controller: controller.portController,
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
@@ -149,6 +157,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                         },
                                       ),
                                       CustomButton(
+                                          key: SettingsKeys.connectButton,
                                           onTap: () async {
                                             if (controller
                                                 .wifiFormKey.currentState!
@@ -228,8 +237,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                             controller:
                                                 controller.apnIPController,
                                             label: "apnIP",
-                                            keyboardType:
-                                                TextInputType.number,
+                                            keyboardType: TextInputType.number,
                                             validator: (value) {
                                               if (value != null) {
                                                 if (value.isEmpty) {
@@ -250,11 +258,10 @@ class SettingsScreen extends GetView<SettingsController> {
                                             controller:
                                                 controller.apnPortController,
                                             label: "apnPort",
-                                            keyboardType:
-                                                TextInputType.number,
+                                            keyboardType: TextInputType.number,
                                             inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .deny(RegExp(r'[,.-]')),
+                                              FilteringTextInputFormatter.deny(
+                                                  RegExp(r'[,.-]')),
                                             ],
                                             validator: (value) {
                                               if (value != null) {
@@ -268,8 +275,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                           ),
                                           CustomButton(
                                               onTap: () async {
-                                                if (controller
-                                                    .mobileDataFormKey
+                                                if (controller.mobileDataFormKey
                                                     .currentState!
                                                     .validate()) {
                                                   controller
@@ -278,8 +284,7 @@ class SettingsScreen extends GetView<SettingsController> {
                                                     if (value) {
                                                       await controller
                                                           .createApn()
-                                                          .then(
-                                                              (value) async {
+                                                          .then((value) async {
                                                         if (value) {
                                                           if (await controller
                                                               .isApnInList()) {
@@ -317,14 +322,11 @@ class SettingsScreen extends GetView<SettingsController> {
                                       key: controller.serverFormKey,
                                       child: Column(
                                         children: [
-
                                           CustomField(
                                             controller:
                                                 controller.serverIpController,
-                                            label:
-                                                TranslationKeys.serverIp.tr,
-                                            keyboardType:
-                                                TextInputType.number,
+                                            label: TranslationKeys.serverIp.tr,
+                                            keyboardType: TextInputType.number,
                                             validator: (value) {
                                               if (value != null) {
                                                 if (value.isEmpty) {
@@ -345,11 +347,10 @@ class SettingsScreen extends GetView<SettingsController> {
                                             controller:
                                                 controller.portController,
                                             label: TranslationKeys.port.tr,
-                                            keyboardType:
-                                                TextInputType.number,
+                                            keyboardType: TextInputType.number,
                                             inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .deny(RegExp(r'[,.-]')),
+                                              FilteringTextInputFormatter.deny(
+                                                  RegExp(r'[,.-]')),
                                             ],
                                             validator: (value) {
                                               if (value != null) {
@@ -365,13 +366,14 @@ class SettingsScreen extends GetView<SettingsController> {
                                             height: height,
                                           ),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               CustomButton(
                                                   onTap: () async {
-                                                    if (controller
-                                                        .serverFormKey
+                                                    if (controller.serverFormKey
                                                         .currentState!
                                                         .validate()) {
                                                       controller
@@ -389,8 +391,8 @@ class SettingsScreen extends GetView<SettingsController> {
                                                       });
                                                     }
                                                   },
-                                                  textButton:
-                                                      TranslationKeys.connect.tr),
+                                                  textButton: TranslationKeys
+                                                      .connect.tr),
                                             ],
                                           ),
                                         ],

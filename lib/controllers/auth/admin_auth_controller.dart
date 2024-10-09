@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +8,6 @@ import 'package:trade_hall/core/localization/translation_keys.dart';
 import 'package:trade_hall/getx_service/app_service.dart';
 import 'package:get/get.dart';
 import 'package:trade_hall/networking/connectivity%20_controller.dart';
-
 import '../../core/constants/routes.dart';
 
 class AdminAuthController extends GetxController {
@@ -21,7 +19,7 @@ class AdminAuthController extends GetxController {
         showSnackBar(TranslationKeys.passwordisWrong.tr);
         return false;
       }
-      _appService.storage.write('admin', true);
+      // _appService.storage.write('admin', true);
       return true;
     }
     showSnackBar(TranslationKeys.passwordisempty.tr);
