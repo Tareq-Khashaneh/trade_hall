@@ -9,7 +9,7 @@ This application for trade hall in Syria to manage sell products for customer de
 ### 3- Adding Products to cart
 ### 4- Deleting products and editting its quantity 
 ### 5- Print invoices
-### 6- Display Facility information like orders and products quantity in facility
+### 6- Display Facility information like orders and products quantity
 ### 7- Display last sessions for user
 ### 8- Set time and date to Pos according to server time
 
