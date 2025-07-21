@@ -12,7 +12,5 @@ This application for trade hall in Syria to manage sell products for customer de
 ### 6- Display Facility information like orders and products quantity
 ### 7- Display last sessions for user
 ### 8- Set time and date to Pos according to server time
-
-
 ## images link
-https://t.me/tareq97/6
+https://t.me/tareq_khashaneh_portfolio
