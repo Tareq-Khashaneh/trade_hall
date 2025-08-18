@@ -1,4 +1,4 @@
-# Tarde hall app for POS devices
+# Cashier Pro app 
 
 This application for trade hall in Syria to manage sell products for customer depending on his quota by scan his Smart card (Mifare) by smart pos device.
 
